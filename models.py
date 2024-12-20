@@ -12,10 +12,10 @@ class Flight(Base):
     flight_name = Column(String, nullable=False)
     departure = Column(String, nullable=False)
     destination = Column(String, nullable=False)
-    date = Column(String, nullable=False)  # Prefer using Date for better date handling if feasible
-    time = Column(String, nullable=False)  # Prefer using Time for better time handling if feasible
+    date = Column(String, nullable=False)  
+    time = Column(String, nullable=False) 
 
-    seats = relationship("Seat", back_populates="flight", cascade="all, delete-orphan")  # Cascading for seat cleanup
+    seats = relationship("Seat", back_populates="flight", cascade="all, delete-orphan")
 
 class Seat(Base):
     __tablename__ = 'seats'
@@ -23,10 +23,10 @@ class Seat(Base):
     flight_id = Column(Integer, ForeignKey('flights.flight_id'), nullable=False)
     class_type = Column(String, CheckConstraint("class_type IN ('Economy', 'Business', 'First')"), nullable=False)
     status = Column(String, CheckConstraint("status IN ('available', 'booked')"), nullable=False, default="available")
-    price = Column(Float, nullable=False)
+    price = Column(Float, nullable=False)  # Price of the seat
 
     flight = relationship("Flight", back_populates="seats")
-    bookings = relationship("Booking", back_populates="seat", cascade="all, delete-orphan")  # Cascading for booking cleanup
+    bookings = relationship("Booking", back_populates="seat", cascade="all, delete-orphan")
 
 class Booking(Base):
     __tablename__ = 'bookings'
@@ -35,8 +35,8 @@ class Booking(Base):
     contact_info = Column(String, nullable=False)
     flight_id = Column(Integer, ForeignKey('flights.flight_id'), nullable=False)
     seat_id = Column(Integer, ForeignKey('seats.seat_id'), nullable=False)
-    class_type = Column(String, nullable=False)  # Consider removing if redundant due to seat association
-    price = Column(Float, nullable=False)
+    class_type = Column(String, nullable=False)  
     booking_time = Column(DateTime, default=datetime.utcnow)
 
     seat = relationship("Seat", back_populates="bookings")
+
